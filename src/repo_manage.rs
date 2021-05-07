@@ -1,12 +1,20 @@
+use rust_embed::RustEmbed;
+use spinner::SpinnerBuilder;
 use std::thread;
 use std::time;
+use yaml_rust::{YamlEmitter, YamlLoader};
 
-use spinner::SpinnerBuilder;
+#[derive(RustEmbed)]
+#[folder = "resources/"]
+#[prefix = "yml/"]
+pub struct YamlRepos;
 
 pub fn add(repo: &str) {
     let sp = SpinnerBuilder::new("Checking repo, please wait...".into()).start();
     sp.update(format!("Adding repo: {}", repo));
     for_millis(1000);
+    let index_html = YamlRepos::get("yml/repos.yml").unwrap();
+    println!("{:?}", std::str::from_utf8(index_html.as_ref()).unwrap());
     println!("\nAdded repo");
     sp.close();
 }
