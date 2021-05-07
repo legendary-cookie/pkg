@@ -1,3 +1,5 @@
+mod install;
+mod repo_manage;
 use clap::{App, Arg};
 
 fn main() {
@@ -6,27 +8,32 @@ fn main() {
         .version("1.0")
         .author("Vento")
         .subcommand(
-            App::new("repo-add").about("Add a repo").arg(
-                Arg::new("URL")
-                    .about("repository URL to add")
-                    .required(true),
+            App::new("repo").about("All the repo stuff").subcommand(
+                App::new("add").about("Add a repo").arg(
+                    Arg::new("URL")
+                        .about("repository URL to add")
+                        .required(true),
+                ),
             ),
         )
         .subcommand(
-            App::new("install")
-                .about("Install a package")
-                .arg(Arg::new("v").short('v').long("verbose"))
-                .arg(Arg::new("NAME").about("Name of the package").required(true)),
+            App::new("install").about("Install a package").arg(
+                Arg::new("PACKAGE")
+                    .about("Name of the package")
+                    .required(true),
+            ),
         )
         .get_matches();
 
-    if let Some(add_matches) = matches.subcommand_matches("repo-add") {
-        // Now we have a reference to clone's matches
-        let repo = add_matches.value_of("URL").unwrap();
-        println!("Adding repo: {}", repo);
+    if let Some(ref matches) = matches.subcommand_matches("repo") {
+        if let Some(add_matches) = matches.subcommand_matches("add") {
+            let repo = add_matches.value_of("URL").unwrap();
+            repo_manage::add(repo);
+        }
     }
 
     if let Some(install_matches) = matches.subcommand_matches("install") {
-        
+        let package = install_matches.value_of("PACKAGE").unwrap();
+        install::install(package);
     }
 }
