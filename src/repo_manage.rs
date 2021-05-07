@@ -2,7 +2,6 @@ use rust_embed::RustEmbed;
 use spinner::SpinnerBuilder;
 use std::collections::BTreeMap;
 use std::fs;
-use std::path::Path;
 use std::thread;
 use std::time;
 
@@ -24,16 +23,17 @@ pub fn add(repo: &str) {
     let mut map = BTreeMap::new();
     let mut repos_lol: Vec<String> = Vec::new();
     for repo_lol in value["repos"].as_sequence().unwrap() {
-        println!("{:?}", repo_lol);
         repos_lol.push(serde_yaml::to_string(repo_lol).unwrap());
     }
-    
     map.insert("repos", &repos_lol);
 
     println!("{:?}", map);
     println!("{:?}", repos_lol);
     //let repos: serde_yaml::Value = serde_yaml::from_str(&new_repos).unwrap();
     //serde_yaml::to_writer(std::io::stdout(), &repos).unwrap();
+    let mapval = serde_yaml::to_value(&map).unwrap();
+    serde_yaml::to_writer(std::io::stdout(), &mapval).unwrap();
+
     serde_yaml::to_writer(std::io::stdout(), &value).unwrap();
 
     println!("\nAdded repo successfully!");
