@@ -1,0 +1,1 @@
+http://raw.githubusercontent.com/legendary-cookie/pkg-repo/main/repo.yml
