@@ -21,20 +21,19 @@ pub fn for_millis(duration: u64) {
 }
 
 pub fn get_conf_folder() -> String {
-    return String::from("/home/vincent/.conf/pkg-cosmo/");
+    return db::get_data_dir();
 }
+
 pub fn exists(path: &str) -> bool {
     fs::metadata(path).is_ok()
 }
 pub fn setup_files() {
     if !exists(&get_conf_folder()) {
-        fs::create_dir_all(get_conf_folder())
-            .expect_err("Whilst creating the config dir, something went wrong!");
+        fs::create_dir(get_conf_folder()).unwrap()
     }
     if !exists(&(get_conf_folder() + "/repos.txt")) {
         let resource = YamlRepos::get("assets/repos.txt").unwrap();
         let template = std::str::from_utf8(resource.as_ref()).unwrap();
-        fs::write(&(get_conf_folder() + "/repos.txt"), template)
-            .expect_err("Whilst copying the repos.txt template something went wrong!");
+        fs::write(&(get_conf_folder() + "/repos.txt"), template).unwrap()
     }
 }

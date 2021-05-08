@@ -1,5 +1,6 @@
 mod install;
 mod repo_manage;
+mod sync;
 use clap::{App, Arg};
 use io_utils;
 use io_utils::db;
@@ -20,6 +21,7 @@ fn main() {
                 ),
             ),
         )
+        .subcommand(App::new("sync").about("Sync with package repos"))
         .subcommand(
             App::new("install").about("Install a package").arg(
                 Arg::new("PACKAGE")
@@ -34,6 +36,10 @@ fn main() {
             let repo = add_matches.value_of("URL").unwrap();
             repo_manage::add(repo);
         }
+    }
+
+    if let Some(sync_matches) = matches.subcommand_matches("sync") {
+        sync::sync();
     }
 
     if let Some(install_matches) = matches.subcommand_matches("install") {

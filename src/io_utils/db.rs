@@ -2,8 +2,8 @@ use rusqlite::{params, Connection};
 
 #[derive(Debug)]
 pub struct Package {
-    package: String,
-    url: String,
+    pub package: String,
+    pub url: String,
 }
 
 pub fn init_db() {
@@ -16,15 +16,7 @@ pub fn init_db() {
         [],
     )
     .unwrap();
-    let testpackage = Package {
-        package: "test".to_owned(),
-        url: "https://repo.example.com/test".to_owned(),
-    };
-    conn.execute(
-        "INSERT INTO packages (package, url) VALUES (?1, ?2)",
-        params![testpackage.package, testpackage.url],
-    )
-    .unwrap();
+    conn.close().ok();
 }
 
 fn open_pkg_db() -> Connection {
@@ -33,10 +25,29 @@ fn open_pkg_db() -> Connection {
     return db.unwrap();
 }
 
-fn get_data_dir() -> String {
+pub fn get_data_dir() -> String {
     match home::home_dir() {
-        Some(path) => return path.display().to_string() + "/.conf/pkg-cosmo/",
+        Some(path) => return path.display().to_string() + "/.pkgs/",
         None => println!("Impossible to get your home dir!"),
     }
     return String::from("");
+}
+
+pub fn insert_pkg(pkgs: std::vec::Vec<&Package>) {
+    let conn = open_pkg_db();
+    for pkg in pkgs {
+        conn.execute(
+            "INSERT INTO packages (package, url) VALUES (?1, ?2)",
+            params![pkg.package, pkg.url],
+        )
+        .unwrap();
+    }
+    conn.close().ok();
+}
+
+pub fn clear_db() {
+    let conn = open_pkg_db();
+    conn.execute("DROP TABLE IF EXISTS packages", []).ok();
+    conn.close().ok();
+    init_db();
 }
