@@ -12,3 +12,8 @@ spinner = "0.5.0"
 rust-embed="5.9.0"
 serde = "1.0"
 serde_yaml = "0.8"
+
+
+[lib]
+name = "io_utils"
+path = "src/io_utils/lib.rs"
