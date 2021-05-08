@@ -2,9 +2,11 @@ mod install;
 mod repo_manage;
 use clap::{App, Arg};
 use io_utils;
+use io_utils::db;
 
 fn main() {
     io_utils::setup_files();
+    db::init_db();
     let matches = App::new("pkg-cosmo")
         .about("A package manager nobody asked for")
         .version("1.0")

@@ -8,6 +8,8 @@ use std::time;
 #[prefix = "assets/"]
 pub struct YamlRepos;
 
+pub mod db;
+
 /**
  * Sleep for milliseconds
  */
