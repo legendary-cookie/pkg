@@ -38,7 +38,7 @@ fn main() {
         }
     }
 
-    if let Some(sync_matches) = matches.subcommand_matches("sync") {
+    if let Some(_sync_matches) = matches.subcommand_matches("sync") {
         sync::sync();
     }
 
