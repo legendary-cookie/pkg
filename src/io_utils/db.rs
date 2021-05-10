@@ -33,15 +33,17 @@ pub fn get_data_dir() -> String {
     return String::from("");
 }
 
+#[allow(deprecated)]
 pub fn find_pkg(pkg: &str) -> String {
     let conn = open_pkg_db();
-    let mut stmt = conn.prepare("SELECT id FROM packages").unwrap();
-    let mut rows = stmt.query([]).unwrap();
-    let mut names = vec![];
+    let mut stmt = conn
+        .prepare("SELECT url FROM packages WHERE package = ?1")
+        .unwrap();
+    let mut rows = stmt.query([pkg]).unwrap();
     while let Some(row) = rows.next().unwrap() {
-        names.push(row.get(0).unwrap());
+        return row.get_raw(0).as_str().unwrap().to_string();
     }
-    return "1".to_owned();
+    return "".to_owned();
 }
 
 pub fn insert_pkg(pkgs: std::vec::Vec<Package>) {
