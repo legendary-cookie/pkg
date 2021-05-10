@@ -34,10 +34,10 @@ pub fn sync() {
             }
             let mut pkgname = vec![];
             for c in line.chars() {
-                pkgname.push(c);
                 if c == '|' {
                     break;
                 }
+                pkgname.push(c);
             }
             println!("{:?}", pkgname);
         }
