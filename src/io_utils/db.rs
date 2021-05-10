@@ -33,7 +33,7 @@ pub fn get_data_dir() -> String {
     return String::from("");
 }
 
-pub fn insert_pkg(pkgs: std::vec::Vec<&Package>) {
+pub fn insert_pkg(pkgs: std::vec::Vec<Package>) {
     let conn = open_pkg_db();
     for pkg in pkgs {
         conn.execute(

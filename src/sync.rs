@@ -1,8 +1,7 @@
 use io_utils;
-use tempfile::tempfile;
-use tempfile::NamedTempFile;
 use std::fs::File;
-use std::io::{BufRead, self, Write, BufReader};
+use std::io::{BufRead, BufReader, Write};
+use tempfile::NamedTempFile;
 
 pub fn sync() {
     io_utils::db::clear_db();
@@ -16,15 +15,12 @@ pub fn sync() {
         if !(line.starts_with("https://") || line.starts_with("http://")) {
             continue;
         }
-        let body: String = ureq::get(&line)
-            .call().unwrap()
-            .into_string().unwrap();
+        let body: String = ureq::get(&line).call().unwrap().into_string().unwrap();
         let mut file = NamedTempFile::new().unwrap();
         let mut file2 = file.reopen().unwrap();
 
         writeln!(file, "{}", body).unwrap();
         let read = BufReader::new(file2);
-        
         for line in read.lines().filter_map(|result| result.ok()) {
             if line.starts_with("\n") {
                 continue;
@@ -39,7 +35,15 @@ pub fn sync() {
                 }
                 pkgname.push(c);
             }
-            println!("{:?}", pkgname);
+            let pkgname: String = pkgname.into_iter().collect();
+            println!("{}", pkgname);
+            let pkgurl: String = line.replace(&format!("{}|", &pkgname), "");
+            println!("{}", pkgurl);
+            let pkg = io_utils::db::Package {
+                package: pkgname,
+                url: pkgurl,
+            };
+            packages.push(pkg);
         }
     }
     io_utils::db::insert_pkg(packages)
