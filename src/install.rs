@@ -33,4 +33,6 @@ pub fn install(pkg: &str) {
         file.write_all(dst.as_slice()).unwrap();
         fs::set_permissions(&pkgpath, fs::Permissions::from_mode(0o755)).unwrap();
     }
+    // Insert into installed database
+    io_utils::db::insert_installed(pkg.to_owned());
 }

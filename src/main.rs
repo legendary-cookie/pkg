@@ -1,6 +1,7 @@
 mod install;
 mod repo_manage;
 mod sync;
+mod uninstall;
 use clap::{App, Arg};
 use io_utils;
 use io_utils::db;
@@ -23,12 +24,20 @@ fn main() {
         )
         .subcommand(App::new("sync").about("Sync with package repos"))
         .subcommand(
+            App::new("uninstall").about("Uninstall a package").arg(
+                Arg::new("PACKAGE")
+                    .about("Package to remove")
+                    .required(true),
+            ),
+        )
+        .subcommand(
             App::new("install").about("Install a package").arg(
                 Arg::new("PACKAGE")
                     .about("Name of the package")
                     .required(true),
             ),
         )
+        .subcommand(App::new("list").about("List installed packages"))
         .get_matches();
 
     if let Some(ref matches) = matches.subcommand_matches("repo") {
@@ -41,6 +50,12 @@ fn main() {
     } else if let Some(install_matches) = matches.subcommand_matches("install") {
         let package = install_matches.value_of("PACKAGE").unwrap();
         install::install(package);
+    } else if let Some(uninstall_matches) = matches.subcommand_matches("uninstall") {
+        let package = uninstall_matches.value_of("PACKAGE").unwrap();
+        uninstall::uninstall(package);
+    } else if let Some(_list_matches) = matches.subcommand_matches("list") {
+        println!("You have the following packages installed: ");
+        io_utils::db::print_installed();
     } else {
         println!("Run with the --help flag to see a full list of available commands!");
     }

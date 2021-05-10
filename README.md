@@ -1,0 +1,2 @@
+# Cosmo-Pkg
+A simple package manager in rust. More of a rust test, than something good. I will probably redo everything to support source tarballs and save files installed in a database. As of now only binarys are supported.

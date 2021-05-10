@@ -16,6 +16,13 @@ pub fn init_db() {
         [],
     )
     .unwrap();
+    conn.execute(
+        "CREATE TABLE IF NOT EXISTS installed (
+                  package              TEXT NOT NULL
+        )",
+        [],
+    )
+    .unwrap();
     conn.close().ok();
 }
 
@@ -56,6 +63,30 @@ pub fn insert_pkg(pkgs: std::vec::Vec<Package>) {
         .unwrap();
     }
     conn.close().ok();
+}
+
+pub fn insert_installed(pkg: String) {
+    let conn = open_pkg_db();
+    conn.execute("INSERT INTO installed (package) VALUES (?1)", params![pkg])
+        .unwrap();
+    conn.close().ok();
+}
+
+pub fn remove_installed(pkg: String) {
+    let conn = open_pkg_db();
+    conn.execute("DELETE FROM installed WHERE package = ?1", params![pkg])
+        .unwrap();
+    conn.close().ok();
+}
+
+#[allow(deprecated)]
+pub fn print_installed() {
+    let conn = open_pkg_db();
+    let mut stmt = conn.prepare("SELECT package FROM installed").unwrap();
+    let mut rows = stmt.query([]).unwrap();
+    while let Some(row) = rows.next().unwrap() {
+        println!("\t{}", row.get_raw(0).as_str().unwrap())
+    }
 }
 
 pub fn clear_db() {
