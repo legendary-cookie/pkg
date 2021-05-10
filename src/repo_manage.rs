@@ -24,7 +24,7 @@ pub fn add(repo: &str) {
         .open(io_utils::get_conf_folder() + "/repos.txt")
         .unwrap();
 
-    if let Err(e) = writeln!(file, "{}", repo) {
+    if let Err(e) = writeln!(file, "\n{}", repo) {
         eprintln!("Couldn't write to file: {}", e);
     }
 
