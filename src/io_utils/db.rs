@@ -33,6 +33,17 @@ pub fn get_data_dir() -> String {
     return String::from("");
 }
 
+pub fn find_pkg(pkg: &str) -> String {
+    let conn = open_pkg_db();
+    let mut stmt = conn.prepare("SELECT id FROM packages").unwrap();
+    let mut rows = stmt.query([]).unwrap();
+    let mut names = vec![];
+    while let Some(row) = rows.next().unwrap() {
+        names.push(row.get(0).unwrap());
+    }
+    return "1".to_owned();
+}
+
 pub fn insert_pkg(pkgs: std::vec::Vec<Package>) {
     let conn = open_pkg_db();
     for pkg in pkgs {

@@ -17,7 +17,7 @@ pub fn sync() {
         }
         let body: String = ureq::get(&line).call().unwrap().into_string().unwrap();
         let mut file = NamedTempFile::new().unwrap();
-        let mut file2 = file.reopen().unwrap();
+        let file2 = file.reopen().unwrap();
 
         writeln!(file, "{}", body).unwrap();
         let read = BufReader::new(file2);
