@@ -36,14 +36,12 @@ fn main() {
             let repo = add_matches.value_of("URL").unwrap();
             repo_manage::add(repo);
         }
-    }
-
-    if let Some(_sync_matches) = matches.subcommand_matches("sync") {
+    } else if let Some(_sync_matches) = matches.subcommand_matches("sync") {
         sync::sync();
-    }
-
-    if let Some(install_matches) = matches.subcommand_matches("install") {
+    } else if let Some(install_matches) = matches.subcommand_matches("install") {
         let package = install_matches.value_of("PACKAGE").unwrap();
         install::install(package);
+    } else {
+        println!("Run with the --help flag to see a full list of available commands!");
     }
 }

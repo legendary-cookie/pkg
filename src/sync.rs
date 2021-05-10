@@ -36,7 +36,6 @@ pub fn sync() {
                 pkgname.push(c);
             }
             let pkgname: String = pkgname.into_iter().collect();
-            println!("{}", pkgname);
             let pkgurl: String = line.replace(&format!("{}|", &pkgname), "");
             println!("{}", pkgurl);
             let pkg = io_utils::db::Package {
@@ -46,5 +45,6 @@ pub fn sync() {
             packages.push(pkg);
         }
     }
-    io_utils::db::insert_pkg(packages)
+    io_utils::db::insert_pkg(packages);
+    println!("\nDone syncing packages!");
 }

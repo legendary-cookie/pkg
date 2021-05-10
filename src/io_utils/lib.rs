@@ -24,6 +24,10 @@ pub fn get_conf_folder() -> String {
     return db::get_data_dir();
 }
 
+pub fn get_bin_dir() -> String {
+    return db::get_data_dir() + "/bin";
+}
+
 pub fn exists(path: &str) -> bool {
     fs::metadata(path).is_ok()
 }
@@ -35,5 +39,8 @@ pub fn setup_files() {
         let resource = YamlRepos::get("assets/repos.txt").unwrap();
         let template = std::str::from_utf8(resource.as_ref()).unwrap();
         fs::write(&(get_conf_folder() + "/repos.txt"), template).unwrap()
+    }
+    if !exists(&(get_bin_dir())) {
+        fs::create_dir_all(get_bin_dir()).unwrap();
     }
 }
