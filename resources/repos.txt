@@ -1,1 +1,1 @@
-https://github.com/legendary-cookie/pkg-repo/raw/main/repo.yaml
+https://github.com/legendary-cookie/pkg-repo/raw/main/repo.txt
